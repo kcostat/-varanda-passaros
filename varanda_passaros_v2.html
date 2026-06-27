@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Varanda dos Pássaros</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://apis.google.com/js/api.js"></script>
+<style>
+:root {
+  --noite: #0D1F0D;
+  --casca: #1A301C;
+  --casca2: #223A24;
+  --musgo: #2A4A2E;
+  --folha: #7DB86A;
+  --palha: #EDF2DC;
+  --areia: #B8C99A;
+  --terra: #C4825A;
+  --ceu: #7AAFC4;
+  --ouro: #D4A844;
+  --preto: #070F07;
+  --borda: rgba(125,184,106,0.15);
+  --borda2: rgba(125,184,106,0.28);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{
+  background:var(--noite);
+  color:var(--palha);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  padding-bottom:100px;
+}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(7,15,7,0.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--borda);
+  padding:14px 20px;
+  display:flex;align-items:center;gap:12px;
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  color:var(--palha);letter-spacing:-0.01em;
+}
+.logo span{color:var(--folha);}
+.header-pills{
+  display:flex;gap:6px;margin-left:auto;
+}
+.pill{
+  background:var(--casca2);
+  border:1px solid var(--borda);
+  border-radius:20px;
+  padding:5px 12px;
+  font-size:12px;font-weight:500;
+  color:var(--areia);
+  display:flex;align-items:center;gap:5px;
+}
+.pill .num{color:var(--folha);font-weight:700;}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;
+  border-bottom:1px solid var(--borda);
+  padding:0 20px;
+  background:var(--preto);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex-shrink:0;
+  padding:13px 16px;
+  border:none;background:none;
+  color:var(--areia);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:500;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:all .2s;opacity:.55;
+  white-space:nowrap;
+}
+.tab.active{color:var(--folha);border-bottom-color:var(--folha);opacity:1;}
+
+/* ── SECTIONS ── */
+.sec{display:none;padding:20px;}
+.sec.active{display:block;}
+
+/* ── DRIVE AUTH ── */
+.auth-screen{
+  min-height:60vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:40px 20px;
+}
+.auth-icon{font-size:56px;margin-bottom:20px;opacity:.8;}
+.auth-title{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-style:italic;
+  color:var(--palha);margin-bottom:10px;
+}
+.auth-sub{
+  font-size:14px;color:var(--areia);
+  opacity:.65;line-height:1.6;
+  max-width:320px;margin:0 auto 28px;
+}
+.btn-google{
+  background:var(--palha);color:#1a1a1a;
+  border:none;border-radius:12px;
+  padding:14px 28px;
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  transition:all .15s;
+  margin:0 auto 12px;
+}
+.btn-google:hover{background:#fff;transform:translateY(-1px);}
+.btn-google img{width:20px;height:20px;}
+
+.folder-input-wrap{
+  display:flex;gap:8px;margin-top:20px;
+  width:100%;max-width:400px;
+}
+.folder-input{
+  flex:1;
+  background:var(--casca2);
+  border:1px solid var(--borda2);
+  border-radius:10px;
+  color:var(--palha);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;padding:11px 14px;
+  outline:none;
+}
+.folder-input:focus{border-color:var(--folha);}
+.folder-input::placeholder{color:var(--areia);opacity:.35;}
+.btn-load{
+  background:var(--folha);color:var(--noite);
+  border:none;border-radius:10px;
+  padding:11px 18px;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+}
+.btn-load:hover{background:var(--palha);}
+
+/* ── ÁLBUM — ESPÉCIES ── */
+.sec-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;color:var(--palha);
+  margin-bottom:4px;
+}
+.sec-sub{font-size:13px;color:var(--areia);opacity:.55;margin-bottom:20px;}
+
+.species-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+
+/* ── SPECIES CARD ── */
+.sp-card{
+  background:var(--casca);
+  border-radius:18px;
+  border:1px solid var(--borda);
+  overflow:hidden;
+  cursor:pointer;
+  transition:all .2s;
+}
+.sp-card:hover{border-color:var(--borda2);transform:translateY(-2px);}
+.sp-cover{
+  position:relative;height:200px;overflow:hidden;
+  background:var(--musgo);
+  display:flex;align-items:center;justify-content:center;
+}
+.sp-cover img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;transition:transform .4s;
+}
+.sp-card:hover .sp-cover img{transform:scale(1.04);}
+.sp-cover-placeholder{font-size:64px;opacity:.2;}
+.sp-cover-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(7,15,7,.9) 0%, rgba(7,15,7,.3) 50%, transparent 100%);
+}
+.sp-cover-info{
+  position:absolute;bottom:0;left:0;right:0;padding:16px;
+}
+.sp-cover-name{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;font-style:italic;
+  color:var(--palha);line-height:1.1;margin-bottom:3px;
+}
+.sp-cover-sci{
+  font-size:11px;color:var(--areia);opacity:.7;font-style:italic;
+}
+.sp-strip{
+  display:flex;gap:6px;padding:10px 12px;
+  overflow-x:auto;scrollbar-width:none;
+  border-top:1px solid var(--borda);
+}
+.sp-strip::-webkit-scrollbar{display:none;}
+.sp-strip-thumb{
+  width:52px;height:40px;border-radius:7px;
+  object-fit:cover;flex-shrink:0;
+  background:var(--musgo);opacity:.8;
+  transition:opacity .15s;cursor:pointer;
+}
+.sp-strip-thumb:hover{opacity:1;}
+.sp-foot{
+  padding:12px 14px;
+  display:flex;align-items:center;gap:8px;
+  border-top:1px solid var(--borda);
+}
+.badge{
+  font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;
+}
+.badge-m{background:rgba(122,175,196,.18);color:var(--ceu);border:1px solid rgba(122,175,196,.3);}
+.badge-f{background:rgba(196,130,90,.18);color:var(--terra);border:1px solid rgba(196,130,90,.3);}
+.badge-u{background:rgba(237,242,220,.08);color:var(--areia);border:1px solid var(--borda);}
+.sp-count{
+  margin-left:auto;
+  font-size:12px;color:var(--areia);opacity:.5;
+}
+.sp-count strong{color:var(--folha);font-weight:600;opacity:1;}
+
+/* ── INDIVIDUALS inside species ── */
+.ind-section{margin-top:28px;}
+.ind-section-title{
+  font-family:'Playfair Display',serif;
+  font-size:16px;color:var(--areia);
+  margin-bottom:12px;opacity:.7;
+  padding-bottom:8px;border-bottom:1px solid var(--borda);
+}
+.ind-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px;
+}
+.ind-card{
+  background:var(--casca);
+  border-radius:14px;overflow:hidden;
+  border:1px solid var(--borda);
+  cursor:pointer;transition:all .2s;
+}
+.ind-card:hover{border-color:var(--borda2);transform:translateY(-1px);}
+.ind-cover{
+  height:130px;background:var(--musgo);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.ind-cover img{width:100%;height:100%;object-fit:cover;}
+.ind-cover-ph{font-size:40px;opacity:.2;}
+.ind-cover-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(7,15,7,.85) 0%,transparent 60%);
+}
+.ind-cover-name{
+  position:absolute;bottom:8px;left:10px;right:10px;
+  font-family:'Playfair Display',serif;
+  font-size:15px;font-weight:700;color:var(--palha);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ind-info{padding:10px 12px;}
+.ind-last{font-size:11px;color:var(--areia);opacity:.5;margin-bottom:3px;}
+.ind-sights{
+  font-size:13px;font-weight:600;color:var(--folha);
+  display:flex;align-items:center;gap:5px;
+}
+.ind-sights span{font-size:11px;color:var(--areia);font-weight:400;opacity:.5;}
+.ind-btn-new{
+  width:100%;height:130px;
+  background:transparent;
+  border:1.5px dashed var(--borda2);
+  border-radius:14px;
+  color:var(--areia);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;cursor:pointer;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+  transition:all .2s;opacity:.5;
+}
+.ind-btn-new:hover{opacity:1;border-color:var(--folha);}
+
+/* ── LOTE (batch) ── */
+.upload-zone{
+  border:1.5px dashed var(--borda2);
+  border-radius:16px;padding:32px 20px;
+  text-align:center;cursor:pointer;
+  background:rgba(125,184,106,.03);
+  transition:all .2s;
+}
+.upload-zone:hover,.upload-zone.over{
+  background:rgba(125,184,106,.08);
+  border-color:var(--folha);
+}
+.uz-icon{font-size:36px;margin-bottom:10px;}
+.uz-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;color:var(--palha);margin-bottom:5px;
+}
+.uz-sub{font-size:13px;color:var(--areia);opacity:.55;}
+.uz-sub em{color:var(--folha);font-style:normal;}
+#fileInput{display:none;}
+
+.queue-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:20px 0 12px;
+}
+.queue-label{font-size:13px;color:var(--areia);opacity:.6;}
+.btn-run{
+  background:var(--folha);color:var(--noite);
+  border:none;border-radius:10px;
+  padding:10px 20px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:7px;
+}
+.btn-run:hover{background:var(--palha);}
+.btn-run:disabled{opacity:.35;cursor:default;}
+
+.proc-banner{
+  background:rgba(125,184,106,.08);
+  border:1px solid rgba(125,184,106,.2);
+  border-radius:10px;padding:12px 16px;
+  display:none;align-items:center;gap:12px;margin-bottom:14px;
+}
+.proc-banner.show{display:flex;}
+.spinner{
+  width:16px;height:16px;flex-shrink:0;
+  border:2px solid rgba(125,184,106,.25);
+  border-top-color:var(--folha);
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-txt{font-size:13px;color:var(--areia);}
+.proc-txt strong{color:var(--folha);}
+
+.queue-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:8px;margin-bottom:20px;
+}
+.q-card{
+  background:var(--casca);border-radius:12px;
+  overflow:hidden;border:1px solid var(--borda);
+  position:relative;cursor:pointer;transition:border-color .2s;
+}
+.q-card.selected{border-color:var(--folha);}
+.q-card.active-view{border-color:var(--ouro);}
+.q-thumb{width:100%;height:100px;object-fit:cover;background:var(--musgo);display:block;}
+.q-foot{padding:8px 10px;}
+.q-fname{font-size:10px;color:var(--areia);opacity:.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
+.q-st{font-size:11px;font-weight:500;}
+.q-st.pending{color:var(--areia);opacity:.35;}
+.q-st.processing{color:var(--folha);}
+.q-st.done{color:var(--folha);}
+.q-st.error{color:var(--terra);}
+.q-done-badge{
+  position:absolute;top:6px;right:6px;
+  background:rgba(7,15,7,.75);
+  border-radius:20px;padding:2px 7px;
+  font-size:10px;color:var(--folha);font-weight:600;
+}
+.q-exif{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(7,15,7,.7);
+  font-size:9px;color:var(--areia);opacity:.7;
+  padding:3px 6px;font-family:monospace;
+}
+
+/* ── RESULT PANEL ── */
+.result-panel{
+  background:var(--casca);border-radius:16px;
+  border:1px solid var(--borda2);overflow:hidden;
+  display:none;margin-bottom:20px;
+}
+.result-panel.show{display:block;}
+.rp-nav{
+  padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--borda);
+}
+.rp-nav-info{font-size:12px;color:var(--areia);opacity:.45;}
+.rp-nav-btns{display:flex;gap:6px;}
+.rp-nav-btn{
+  background:var(--musgo);border:none;
+  border-radius:7px;color:var(--areia);
+  width:28px;height:28px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.rp-nav-btn:disabled{opacity:.25;cursor:default;}
+.rp-top{display:flex;gap:14px;padding:16px;}
+.rp-thumb{
+  width:80px;height:80px;border-radius:10px;
+  object-fit:cover;background:var(--musgo);flex-shrink:0;
+}
+.rp-exif{
+  font-size:10px;color:var(--areia);opacity:.45;
+  font-family:monospace;margin-bottom:6px;letter-spacing:.01em;
+}
+.rp-name{
+  font-family:'Playfair Display',serif;
+  font-size:18px;color:var(--palha);margin-bottom:2px;
+}
+.rp-sci{font-size:12px;font-style:italic;color:var(--areia);opacity:.6;margin-bottom:8px;}
+.rp-meta{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--borda);
+}
+.rp-mi{background:var(--casca);padding:11px 14px;}
+.rp-ml{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--areia);opacity:.4;margin-bottom:3px;}
+.rp-mv{font-size:13px;font-weight:500;color:var(--palha);}
+.conf-wrap{padding:12px 16px 0;}
+.conf-row{display:flex;justify-content:space-between;font-size:11px;color:var(--areia);opacity:.4;margin-bottom:5px;}
+.conf-bar{height:2px;background:var(--musgo);border-radius:2px;overflow:hidden;}
+.conf-fill{height:100%;background:var(--folha);transition:width .5s ease;}
+.rp-notes{
+  padding:14px 16px;font-size:13px;
+  color:var(--areia);line-height:1.65;opacity:.8;
+  border-top:1px solid var(--borda);
+}
+.rp-match{
+  padding:10px 16px;font-size:12px;color:var(--ouro);
+  background:rgba(212,168,68,.07);
+  border-top:1px solid rgba(212,168,68,.15);display:none;
+}
+.rp-match.show{display:block;}
+
+/* Assign to individual */
+.rp-assign{
+  padding:14px 16px;border-top:1px solid var(--borda);
+}
+.rp-assign-title{font-size:12px;color:var(--areia);opacity:.5;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;}
+.assign-options{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;}
+.assign-chip{
+  background:var(--casca2);border:1px solid var(--borda2);
+  border-radius:20px;padding:6px 12px;
+  font-size:12px;color:var(--areia);cursor:pointer;
+  transition:all .15s;
+}
+.assign-chip:hover,.assign-chip.sel{
+  background:rgba(125,184,106,.15);
+  border-color:var(--folha);color:var(--folha);
+}
+.assign-new{
+  display:flex;gap:7px;margin-top:8px;
+}
+.assign-input{
+  flex:1;background:var(--musgo);border:1px solid var(--borda2);
+  border-radius:8px;color:var(--palha);
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  padding:9px 12px;outline:none;
+}
+.assign-input:focus{border-color:var(--folha);}
+.assign-input::placeholder{color:var(--areia);opacity:.3;}
+.btn-assign{
+  background:var(--folha);color:var(--noite);
+  border:none;border-radius:8px;padding:9px 14px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;
+}
+.btn-assign:hover{background:var(--palha);}
+.rp-actions{
+  padding:12px 16px;border-top:1px solid var(--borda);
+  display:flex;gap:8px;
+}
+.btn-add{
+  flex:1;background:var(--folha);color:var(--noite);
+  border:none;border-radius:10px;padding:11px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+}
+.btn-add:hover{background:var(--palha);}
+.btn-add:disabled{opacity:.35;cursor:default;}
+.btn-skip{
+  background:var(--casca2);color:var(--areia);
+  border:none;border-radius:10px;padding:11px 14px;
+  font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;
+}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(4,10,4,.92);
+  z-index:300;display:none;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.modal-overlay.show{display:flex;align-items:flex-end;}
+@media(min-width:600px){.modal-overlay.show{align-items:center;justify-content:center;}}
+.modal{
+  background:var(--casca);
+  border-radius:22px 22px 0 0;
+  width:100%;max-height:92vh;overflow-y:auto;
+  padding:20px;position:relative;
+}
+@media(min-width:600px){
+  .modal{border-radius:22px;max-width:520px;max-height:85vh;}
+}
+.modal-drag{width:36px;height:4px;background:var(--musgo);border-radius:2px;margin:0 auto 20px;}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:var(--musgo);border:none;border-radius:50%;
+  width:30px;height:30px;color:var(--areia);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+
+/* Individual detail modal */
+.modal-hero{
+  position:relative;height:220px;border-radius:14px;
+  overflow:hidden;background:var(--musgo);margin-bottom:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-hero img{width:100%;height:100%;object-fit:cover;}
+.modal-hero-ph{font-size:64px;opacity:.2;}
+.modal-hero-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(7,15,7,.9) 0%,transparent 55%);
+}
+.modal-hero-name{
+  position:absolute;bottom:14px;left:16px;right:16px;
+}
+.modal-hero-bird{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;font-style:italic;
+  color:var(--palha);margin-bottom:2px;
+}
+.modal-hero-sp{font-size:12px;color:var(--areia);opacity:.6;font-style:italic;}
+
+/* Photo film strip */
+.film-strip{
+  display:flex;gap:6px;
+  overflow-x:auto;margin-bottom:16px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.film-strip::-webkit-scrollbar{display:none;}
+.film-frame{
+  flex-shrink:0;
+  width:90px;height:68px;border-radius:8px;
+  object-fit:cover;background:var(--musgo);
+  border:2px solid transparent;cursor:pointer;
+  transition:border-color .15s;
+}
+.film-frame:hover,.film-frame.active-frame{border-color:var(--folha);}
+.film-frame-wrap{position:relative;flex-shrink:0;}
+.film-date{
+  position:absolute;bottom:3px;left:3px;right:3px;
+  background:rgba(7,15,7,.75);border-radius:4px;
+  font-size:8px;color:var(--areia);padding:2px 4px;
+  font-family:monospace;text-align:center;
+}
+
+/* Name editor */
+.name-editor{
+  display:flex;gap:8px;margin-bottom:16px;align-items:center;
+}
+.name-ed-input{
+  flex:1;background:var(--musgo);border:1px solid var(--borda2);
+  border-radius:10px;color:var(--palha);
+  font-family:'Playfair Display',serif;font-size:16px;
+  padding:10px 14px;outline:none;
+}
+.name-ed-input:focus{border-color:var(--folha);}
+.btn-name-save{
+  background:var(--folha);color:var(--noite);
+  border:none;border-radius:10px;padding:10px 16px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+}
+
+/* Stats */
+.ind-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;
+}
+.ind-stat{
+  background:var(--casca2);border-radius:10px;padding:12px 10px;text-align:center;
+}
+.ind-stat-num{
+  font-family:'Playfair Display',serif;font-size:22px;
+  color:var(--folha);line-height:1;margin-bottom:3px;
+}
+.ind-stat-lbl{font-size:10px;color:var(--areia);opacity:.45;text-transform:uppercase;letter-spacing:.04em;}
+
+/* Timeline */
+.timeline-title{
+  font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--areia);opacity:.35;margin:16px 0 10px;
+}
+.tl-item{
+  display:flex;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--borda);
+  align-items:center;
+}
+.tl-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--folha);flex-shrink:0;opacity:.6;
+}
+.tl-date{font-size:12px;color:var(--areia);opacity:.6;font-family:monospace;flex:1;}
+.tl-time{font-size:11px;color:var(--areia);opacity:.35;font-family:monospace;}
+.tl-thumb{
+  width:40px;height:32px;border-radius:5px;object-fit:cover;
+  background:var(--musgo);flex-shrink:0;
+}
+
+.btn-del{
+  width:100%;margin-top:20px;
+  background:none;border:1px solid rgba(196,130,90,.25);
+  color:var(--terra);border-radius:10px;padding:11px;
+  font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;
+}
+
+/* ── EMPTY ── */
+.empty{
+  text-align:center;padding:56px 20px;
+}
+.empty-icon{font-size:52px;margin-bottom:14px;opacity:.2;}
+.empty-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;color:var(--palha);opacity:.5;margin-bottom:6px;
+}
+.empty-sub{font-size:13px;color:var(--areia);opacity:.35;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(70px);
+  background:var(--folha);color:var(--noite);
+  padding:10px 22px;border-radius:22px;
+  font-size:13px;font-weight:700;
+  z-index:400;white-space:nowrap;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* stats bar */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;margin-bottom:22px;
+}
+.st-box{
+  background:var(--casca);border-radius:12px;
+  border:1px solid var(--borda);padding:14px 8px;text-align:center;
+}
+.st-n{
+  font-family:'Playfair Display',serif;
+  font-size:24px;color:var(--folha);line-height:1;margin-bottom:3px;
+}
+.st-l{font-size:10px;color:var(--areia);opacity:.4;text-transform:uppercase;letter-spacing:.04em;}
+
+@media(min-width:768px){
+  .species-grid{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));}
+  .ind-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Varanda <span>Pássaros</span></div>
+  <div class="header-pills">
+    <div class="pill"><span class="num" id="hEsp">0</span> espécies</div>
+    <div class="pill"><span class="num" id="hInd">0</span> indivíduos</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('album',this)">🦜 Álbum</button>
+  <button class="tab" onclick="switchTab('lote',this)">📸 Lote</button>
+  <button class="tab" onclick="switchTab('drive',this)">☁️ Drive</button>
+</div>
+
+<!-- ══ ÁLBUM ══ -->
+<div class="sec active" id="sec-album">
+  <div class="stats-grid">
+    <div class="st-box"><div class="st-n" id="stEsp">0</div><div class="st-l">espécies</div></div>
+    <div class="st-box"><div class="st-n" id="stInd">0</div><div class="st-l">indivíduos</div></div>
+    <div class="st-box"><div class="st-n" id="stAvs">0</div><div class="st-l">avistamentos</div></div>
+    <div class="st-box"><div class="st-n" id="stDias">0</div><div class="st-l">dias ativos</div></div>
+  </div>
+  <div id="albumContent">
+    <div class="empty">
+      <div class="empty-icon">🪺</div>
+      <div class="empty-title">Álbum vazio</div>
+      <div class="empty-sub">Analise fotos na aba Lote para começar o catálogo</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOTE ══ -->
+<div class="sec" id="sec-lote">
+  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+    <div class="uz-icon">📂</div>
+    <div class="uz-title">Selecionar fotos para análise</div>
+    <div class="uz-sub">Escolha <em>várias de uma vez</em> · JPG, HEIC, PNG</div>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" multiple onchange="addToQueue(event)">
+
+  <div id="queueArea" style="display:none">
+    <div class="queue-bar">
+      <div class="queue-label" id="queueLabel">0 fotos</div>
+      <button class="btn-run" id="btnRun" onclick="startBatch()">▶ Analisar tudo</button>
+    </div>
+    <div class="proc-banner" id="procBanner">
+      <div class="spinner"></div>
+      <div class="proc-txt">Analisando <strong id="procName">—</strong> <span id="procProg" style="opacity:.4"></span></div>
+    </div>
+    <div class="queue-grid" id="queueGrid"></div>
+    <div class="result-panel" id="resultPanel">
+      <div class="rp-nav">
+        <div class="rp-nav-info" id="rpNavInfo">—</div>
+        <div class="rp-nav-btns">
+          <button class="rp-nav-btn" id="btnPrev" onclick="navResult(-1)">‹</button>
+          <button class="rp-nav-btn" id="btnNext" onclick="navResult(1)">›</button>
+        </div>
+      </div>
+      <div class="rp-top">
+        <img class="rp-thumb" id="rpThumb" src="" alt="">
+        <div style="flex:1;min-width:0">
+          <div class="rp-exif" id="rpExif">—</div>
+          <div class="rp-name" id="rpName">—</div>
+          <div class="rp-sci" id="rpSci">—</div>
+          <div id="rpBadges" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+        </div>
+      </div>
+      <div class="conf-wrap">
+        <div class="conf-row"><span>Confiança</span><span id="confPct">—</span></div>
+        <div class="conf-bar"><div class="conf-fill" id="confFill" style="width:0%"></div></div>
+      </div>
+      <div class="rp-meta">
+        <div class="rp-mi"><div class="rp-ml">Família</div><div class="rp-mv" id="rpFam">—</div></div>
+        <div class="rp-mi"><div class="rp-ml">Sexo</div><div class="rp-mv" id="rpSex">—</div></div>
+        <div class="rp-mi"><div class="rp-ml">Plumagem</div><div class="rp-mv" id="rpPlum">—</div></div>
+        <div class="rp-mi"><div class="rp-ml">EXIF data</div><div class="rp-mv" id="rpDate" style="font-size:11px;font-family:monospace">—</div></div>
+      </div>
+      <div class="rp-notes" id="rpNotes">—</div>
+      <div class="rp-match" id="rpMatch"></div>
+      <div class="rp-assign">
+        <div class="rp-assign-title">Atribuir a um indivíduo</div>
+        <div class="assign-options" id="assignOptions"></div>
+        <div class="assign-new">
+          <input class="assign-input" id="assignInput" placeholder="Nome do pássaro (ex: Sabiá João)" maxlength="40">
+          <button class="btn-assign" onclick="assignNew()">+ Novo</button>
+        </div>
+      </div>
+      <div class="rp-actions">
+        <button class="btn-add" id="rpBtnAdd" onclick="addCurrentToCatalog()">✦ Adicionar ao catálogo</button>
+        <button class="btn-skip" onclick="skipCurrent()">Pular</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DRIVE ══ -->
+<div class="sec" id="sec-drive">
+  <div id="driveAuthScreen" class="auth-screen">
+    <div class="auth-icon">☁️</div>
+    <div class="auth-title">Conectar ao Google Drive</div>
+    <div class="auth-sub">O app vai ler as fotos direto da pasta do Drive — sem baixar nada no celular.</div>
+    <button class="btn-google" onclick="signInGoogle()">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Entrar com Google
+    </button>
+    <div style="font-size:12px;color:var(--areia);opacity:.4;margin-bottom:16px;">— ou cole o link da pasta —</div>
+    <div class="folder-input-wrap">
+      <input class="folder-input" id="folderUrl" placeholder="https://drive.google.com/drive/folders/..." value="https://drive.google.com/drive/folders/1VteDKHnHriE3zRIoogElVtXSzkCCUl2l">
+      <button class="btn-load" onclick="loadFromFolderUrl()">Carregar</button>
+    </div>
+  </div>
+  <div id="driveFileList" style="display:none">
+    <div class="queue-bar">
+      <div class="queue-label" id="driveFileCount">0 fotos encontradas</div>
+      <button class="btn-run" id="btnDriveProcess" onclick="processDriveFiles()">▶ Analisar todas</button>
+    </div>
+    <div class="proc-banner" id="driveProcBanner">
+      <div class="spinner"></div>
+      <div class="proc-txt">Baixando e analisando <strong id="driveProcName">—</strong> <span id="driveProcProg" style="opacity:.4"></span></div>
+    </div>
+    <div class="queue-grid" id="driveGrid"></div>
+  </div>
+</div>
+
+<!-- ══ INDIVIDUAL MODAL ══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-drag"></div>
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-hero" id="modalHero">
+      <div class="modal-hero-ph">🐦</div>
+    </div>
+    <div class="name-editor">
+      <input class="name-ed-input" id="nameEdInput" placeholder="Nome do pássaro..." maxlength="40">
+      <button class="btn-name-save" onclick="saveName()">Salvar</button>
+    </div>
+    <div class="ind-stats">
+      <div class="ind-stat"><div class="ind-stat-num" id="mAvs">0</div><div class="ind-stat-lbl">avistamentos</div></div>
+      <div class="ind-stat"><div class="ind-stat-num" id="mDias">0</div><div class="ind-stat-lbl">dias únicos</div></div>
+      <div class="ind-stat"><div class="ind-stat-num" id="mFotos">0</div><div class="ind-stat-lbl">fotos</div></div>
+    </div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--areia);opacity:.35;margin-bottom:8px;">Fotos</div>
+    <div class="film-strip" id="modalFilmStrip"></div>
+    <div class="timeline-title">Linha do tempo</div>
+    <div id="modalTimeline"></div>
+    <button class="btn-del" onclick="deleteIndividual()">🗑 Remover indivíduo</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const CLIENT_ID = '274292222687-13pcc8j3gfr4dn7n39umlm28nrsuldua.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+const STORAGE_KEY = 'varanda_passaros_v2';
+
+// catalog structure:
+// species[]: { id, name, scientific, family, sex, individuals[] }
+// individual: { id, customName, speciesId, photos[], sightingDates[] }
+// photo: { dataUrl, filename, exifDate, exifTime, addedAt }
+
+let catalog = { species: [] };
+let queue = []; // local file queue
+let driveFiles = []; // drive file list
+let viewingIdx = -1;
+let selectedAssign = null; // individual id or 'new'
+let modalIndividualId = null;
+
+// ══ STORAGE ══
+function save() {
+  try {
+    // save without dataUrls to avoid quota — only keep last 3 photos per individual
+    const lite = JSON.parse(JSON.stringify(catalog));
+    lite.species.forEach(sp => sp.individuals.forEach(ind => {
+      ind.photos = ind.photos.slice(-5).map(p => ({...p, dataUrl: p.dataUrl?.substring(0,50000) || ''}));
+    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lite));
+  } catch(e) { console.warn('Storage full', e); }
+}
+function load() {
+  try {
+    const d = localStorage.getItem(STORAGE_KEY);
+    if (d) catalog = JSON.parse(d);
+  } catch(e) {}
+  updateHeader();
+}
+
+// ══ TABS ══
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sec-' + name).classList.add('active');
+  if (name === 'album') renderAlbum();
+}
+
+// ══ HEADER / STATS ══
+function updateHeader() {
+  const sp = catalog.species.length;
+  const ind = catalog.species.reduce((a,s) => a + s.individuals.length, 0);
+  const avs = catalog.species.reduce((a,s) => a + s.individuals.reduce((b,i) => b + (i.sightingDates?.length||0), 0), 0);
+  const dias = new Set(catalog.species.flatMap(s => s.individuals.flatMap(i => (i.sightingDates||[]).map(d => d.split(' ')[0])))).size;
+  document.getElementById('hEsp').textContent = sp;
+  document.getElementById('hInd').textContent = ind;
+  document.getElementById('stEsp').textContent = sp;
+  document.getElementById('stInd').textContent = ind;
+  document.getElementById('stAvs').textContent = avs;
+  document.getElementById('stDias').textContent = dias;
+}
+
+// ══ EXIF PARSER ══
+function parseExif(dataUrl) {
+  return new Promise(resolve => {
+    try {
+      const arr = atob(dataUrl.split(',')[1]);
+      const bytes = new Uint8Array(arr.length);
+      for (let i = 0; i < arr.length; i++) bytes[i] = arr.charCodeAt(i);
+      // Look for EXIF DateTimeOriginal (0x9003) in first 128KB
+      const view = new DataView(bytes.buffer);
+      let offset = 2;
+      const len = Math.min(bytes.length, 131072);
+      // Find 0xFFE1 (APP1/EXIF marker)
+      while (offset < len - 4) {
+        if (view.getUint8(offset) === 0xFF && view.getUint8(offset+1) === 0xE1) {
+          const app1Len = view.getUint16(offset+2);
+          const exifHeader = String.fromCharCode(...bytes.slice(offset+4, offset+10));
+          if (exifHeader.startsWith('Exif')) {
+            const tiffStart = offset + 10;
+            const littleEndian = view.getUint16(tiffStart) === 0x4949;
+            const getUint16 = (o) => littleEndian ? view.getUint16(tiffStart+o, true) : view.getUint16(tiffStart+o);
+            const getUint32 = (o) => littleEndian ? view.getUint32(tiffStart+o, true) : view.getUint32(tiffStart+o);
+            const ifdOffset = getUint32(4);
+            const numEntries = getUint16(ifdOffset);
+            for (let e = 0; e < numEntries; e++) {
+              const entryOffset = ifdOffset + 2 + e * 12;
+              const tag = getUint16(entryOffset);
+              if (tag === 0x9003 || tag === 0x0132) { // DateTimeOriginal or DateTime
+                const valOffset = getUint32(entryOffset + 8);
+                let dateStr = '';
+                for (let c = 0; c < 19; c++) {
+                  const ch = bytes[tiffStart + valOffset + c];
+                  if (ch) dateStr += String.fromCharCode(ch);
+                }
+                // format: "2024:01:15 10:30:00"
+                const m = dateStr.match(/(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
+                if (m) {
+                  resolve({ date: `${m[3]}/${m[2]}/${m[1]}`, time: `${m[4]}:${m[5]}`, full: dateStr });
+                  return;
+                }
+              }
+            }
+          }
+          break;
+        }
+        offset++;
+      }
+    } catch(e) {}
+    resolve(null);
+  });
+}
+
+// ══ QUEUE (local files) ══
+function addToQueue(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      const exif = await parseExif(ev.target.result);
+      queue.push({ file, dataUrl: ev.target.result, exif, result: null, status: 'pending', added: false, assignedTo: null });
+      renderQueue();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+function renderQueue() {
+  const area = document.getElementById('queueArea');
+  area.style.display = queue.length ? '' : 'none';
+  document.getElementById('queueLabel').textContent = `${queue.length} foto${queue.length!==1?'s':''}`;
+  const grid = document.getElementById('queueGrid');
+  grid.innerHTML = queue.map((item, i) => {
+    const st = item.status;
+    const stLabel = st==='pending'?'Aguardando':st==='processing'?'Analisando...':
+      st==='done'?(item.result?.name||'Identificado'):st==='unidentifiable'?'Inconclusiva':'Erro';
+    const doneBadge = (st==='done'||st==='unidentifiable') ? `<div class="q-done-badge">${st==='done'?'✓':'?'}</div>` : '';
+    const exifLabel = item.exif ? `<div class="q-exif">${item.exif.date} ${item.exif.time}</div>` : '';
+    const isActive = viewingIdx === i ? 'active-view' : '';
+    return `<div class="q-card ${isActive}" onclick="viewResult(${i})">
+      <img class="q-thumb" src="${item.dataUrl}" alt="">
+      ${exifLabel}
+      <div class="q-foot">
+        <div class="q-fname">${item.file.name}</div>
+        <div class="q-st ${st}">${stLabel}</div>
+      </div>
+      ${doneBadge}
+    </div>`;
+  }).join('');
+}
+
+async function startBatch() {
+  const btn = document.getElementById('btnRun');
+  btn.disabled = true;
+  document.getElementById('procBanner').classList.add('show');
+  let first = true;
+  for (let i = 0; i < queue.length; i++) {
+    if (queue[i].status !== 'pending') continue;
+    queue[i].status = 'processing';
+    document.getElementById('procName').textContent = queue[i].file.name;
+    document.getElementById('procProg').textContent = `(${i+1}/${queue.length})`;
+    renderQueue();
+    await analyzePhoto(i);
+    if (first && queue[i].result) { viewResult(i); first = false; }
+    await new Promise(r => setTimeout(r, 300));
+  }
+  document.getElementById('procBanner').classList.remove('show');
+  btn.disabled = false;
+  btn.textContent = '✓ Concluído';
+  toast('Análise concluída!');
+}
+
+async function analyzePhoto(idx) {
+  const item = queue[idx];
+  await _analyzeDataUrl(item.dataUrl, item.file.name, item.exif, idx, queue, renderQueue);
+}
+
+async function _analyzeDataUrl(dataUrl, filename, exif, idx, arr, renderFn) {
+  const item = arr[idx];
+  const b64 = dataUrl.split(',')[1];
+  const mime = dataUrl.split(';')[0].split(':')[1];
+  const knownSpecies = catalog.species.map(s => `${s.name} (${s.scientific})`).join(', ');
+  const exifCtx = exif ? `A foto foi tirada em ${exif.date} às ${exif.time}.` : '';
+  const prompt = `Você é ornitólogo especialista em aves urbanas do Brasil, especialmente São Paulo.
+Analise esta foto tirada na varanda de uma casa em SP com comedouro de frutas.
+${exifCtx}
+${knownSpecies ? `Espécies já no catálogo: ${knownSpecies}.` : ''}
+Responda SOMENTE com JSON válido, sem texto extra.
+{
+  "name": "nome popular em português",
+  "scientific": "nome científico",
+  "family": "família",
+  "sex": "Macho" ou "Fêmea" ou "Indeterminado",
+  "plumage": "plumagem em 4 palavras",
+  "confidence": 0-100,
+  "notes": "2 frases: características visíveis + se é o mesmo indivíduo já visto",
+  "same_species_as": "nome científico se igual a uma espécie já catalogada, senão null",
+  "unidentifiable": false
+}
+Se a foto estiver escura/desfocada demais: {"unidentifiable":true,"name":"Inconclusiva","notes":"motivo"}`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-6', max_tokens:600,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mime,data:b64}},
+          {type:'text',text:prompt}
+        ]}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content.map(c=>c.text||'').join('');
+    const result = JSON.parse(text.replace(/```json|```/g,'').trim());
+    item.result = result;
+    item.status = result.unidentifiable ? 'unidentifiable' : 'done';
+  } catch(e) {
+    item.status = 'error';
+    item.result = {name:'Erro',notes:'Não foi possível analisar.'};
+  }
+  if (renderFn) renderFn();
+}
+
+// ══ VIEW RESULT ══
+function viewResult(idx) {
+  viewingIdx = idx;
+  const item = queue[idx];
+  if (!item.result) return;
+  const r = item.result;
+  const panel = document.getElementById('resultPanel');
+  panel.classList.add('show');
+  document.getElementById('rpNavInfo').textContent = `${idx+1} de ${queue.length}`;
+  document.getElementById('btnPrev').disabled = idx===0;
+  document.getElementById('btnNext').disabled = idx===queue.length-1;
+  document.getElementById('rpThumb').src = item.dataUrl;
+  document.getElementById('rpExif').textContent = item.exif ? `📅 ${item.exif.date} · 🕐 ${item.exif.time}` : '📅 Data não disponível';
+  document.getElementById('rpName').textContent = r.name||'—';
+  document.getElementById('rpSci').textContent = r.scientific||'';
+  document.getElementById('rpFam').textContent = r.family||'—';
+  document.getElementById('rpSex').textContent = r.sex||'—';
+  document.getElementById('rpPlum').textContent = r.plumage||'—';
+  document.getElementById('rpDate').textContent = item.exif?.full||'—';
+  const conf = r.confidence||0;
+  document.getElementById('confPct').textContent = conf+'%';
+  document.getElementById('confFill').style.width = conf+'%';
+  const bx = document.getElementById('rpBadges');
+  const sc = r.sex==='Macho'?'badge-m':r.sex==='Fêmea'?'badge-f':'badge-u';
+  const confLabel = conf>=75?'Identificação segura':conf>=50?'Provável':'Incerto';
+  const confStyle = conf>=75?'background:rgba(125,184,106,.2);color:var(--folha);border:1px solid rgba(125,184,106,.3)':'background:rgba(212,168,68,.15);color:var(--ouro);border:1px solid rgba(212,168,68,.25)';
+  bx.innerHTML = `<span class="badge ${sc}">${r.sex||'Ind.'}</span><span class="badge" style="${confStyle}">${confLabel}</span>`;
+  document.getElementById('rpNotes').textContent = r.notes||'';
+  const matchEl = document.getElementById('rpMatch');
+  const sameSpecies = r.same_species_as ? catalog.species.find(s=>s.scientific===r.same_species_as) : null;
+  if (sameSpecies) {
+    matchEl.classList.add('show');
+    matchEl.textContent = `⭐ Mesma espécie já catalogada: ${sameSpecies.name}`;
+  } else matchEl.classList.remove('show');
+  renderAssignOptions(r);
+  const btn = document.getElementById('rpBtnAdd');
+  btn.disabled = r.unidentifiable;
+  btn.textContent = item.added ? '✓ Adicionado' : '✦ Adicionar ao catálogo';
+  if (item.added) btn.disabled = true;
+  renderQueue();
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function renderAssignOptions(r) {
+  const opts = document.getElementById('assignOptions');
+  selectedAssign = null;
+  const sameSpecies = r?.same_species_as ? catalog.species.find(s=>s.scientific===r.same_species_as) : null;
+  const speciesMatch = sameSpecies || (r?.scientific ? catalog.species.find(s=>s.scientific===r.scientific) : null);
+  if (speciesMatch && speciesMatch.individuals.length > 0) {
+    opts.innerHTML = speciesMatch.individuals.map(ind =>
+      `<div class="assign-chip" data-id="${ind.id}" onclick="selectAssign('${ind.id}',this)">${ind.customName||'Indivíduo '+(speciesMatch.individuals.indexOf(ind)+1)}</div>`
+    ).join('');
+  } else {
+    opts.innerHTML = '<div style="font-size:12px;color:var(--areia);opacity:.35">Nenhum indivíduo ainda nesta espécie</div>';
+  }
+  document.getElementById('assignInput').value = '';
+}
+
+function selectAssign(id, el) {
+  document.querySelectorAll('.assign-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedAssign = id;
+}
+
+function assignNew() {
+  const name = document.getElementById('assignInput').value.trim();
+  if (!name) { document.getElementById('assignInput').focus(); return; }
+  selectedAssign = '__new__:' + name;
+  document.querySelectorAll('.assign-chip').forEach(c=>c.classList.remove('sel'));
+  toast(`Novo indivíduo: ${name}`);
+}
+
+function navResult(dir) {
+  const next = viewingIdx + dir;
+  if (next >= 0 && next < queue.length) viewResult(next);
+}
+
+function addCurrentToCatalog() {
+  if (viewingIdx < 0) return;
+  const item = queue[viewingIdx];
+  const r = item.result;
+  if (!r || r.unidentifiable) return;
+  const now = new Date();
+  const dateStr = item.exif?.date || now.toLocaleDateString('pt-BR');
+  const timeStr = item.exif?.time || now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const sightingEntry = { date: dateStr, time: timeStr, filename: item.file?.name||'drive', dataUrl: item.dataUrl };
+
+  // find or create species
+  let sp = catalog.species.find(s => s.scientific === r.scientific);
+  if (!sp) {
+    sp = { id: 'sp_'+Date.now(), name: r.name, scientific: r.scientific||'', family: r.family||'', sex: r.sex||'Indeterminado', individuals: [] };
+    catalog.species.push(sp);
+  }
+
+  // find or create individual
+  let ind = null;
+  if (selectedAssign && selectedAssign.startsWith('__new__:')) {
+    const cName = selectedAssign.replace('__new__:','');
+    ind = { id: 'ind_'+Date.now(), customName: cName, speciesId: sp.id, photos: [], sightingDates: [] };
+    sp.individuals.push(ind);
+  } else if (selectedAssign) {
+    ind = sp.individuals.find(i => i.id === selectedAssign);
+  }
+  if (!ind) {
+    // auto-create unnamed individual
+    const num = sp.individuals.length + 1;
+    ind = { id: 'ind_'+Date.now()+'_'+num, customName: '', speciesId: sp.id, photos: [], sightingDates: [] };
+    sp.individuals.push(ind);
+  }
+
+  ind.photos.push(sightingEntry);
+  ind.sightingDates.push(`${dateStr} ${timeStr}`);
+  item.added = true;
+  item.assignedTo = ind.id;
+  save();
+  updateHeader();
+  viewResult(viewingIdx);
+  toast(`Adicionado a ${ind.customName || sp.name}!`);
+}
+
+function skipCurrent() {
+  const next = viewingIdx + 1;
+  if (next < queue.length) viewResult(next);
+  else document.getElementById('resultPanel').classList.remove('show');
+}
+
+// ══ ALBUM ══
+function renderAlbum() {
+  updateHeader();
+  const el = document.getElementById('albumContent');
+  if (!catalog.species.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">🪺</div><div class="empty-title">Álbum vazio</div><div class="empty-sub">Analise fotos na aba Lote para começar</div></div>`;
+    return;
+  }
+  el.innerHTML = catalog.species.map(sp => {
+    const allPhotos = sp.individuals.flatMap(i => i.photos);
+    const coverPhoto = allPhotos[allPhotos.length-1];
+    const totalAvs = sp.individuals.reduce((a,i) => a+i.sightingDates.length, 0);
+    const stripThumbs = allPhotos.slice(-8).map(p =>
+      `<img class="sp-strip-thumb" src="${p.dataUrl}" alt="" onclick="event.stopPropagation()">`
+    ).join('');
+    const sexClass = sp.sex==='Macho'?'badge-m':sp.sex==='Fêmea'?'badge-f':'badge-u';
+    const indGrid = sp.individuals.map((ind,ii) => {
+      const lastPhoto = ind.photos[ind.photos.length-1];
+      const displayName = ind.customName || `Indivíduo ${ii+1}`;
+      const lastDate = ind.sightingDates[ind.sightingDates.length-1]||'—';
+      return `<div class="ind-card" onclick="openModal('${ind.id}','${sp.id}')">
+        <div class="ind-cover">
+          ${lastPhoto ? `<img src="${lastPhoto.dataUrl}" alt="">` : '<div class="ind-cover-ph">🐦</div>'}
+          <div class="ind-cover-grad"></div>
+          <div class="ind-cover-name">${displayName}</div>
+        </div>
+        <div class="ind-info">
+          <div class="ind-last">Último: ${lastDate.split(' ')[0]}</div>
+          <div class="ind-sights">${ind.sightingDates.length} <span>avistamento${ind.sightingDates.length!==1?'s':''}</span></div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:32px">
+      <div class="sp-card" style="margin-bottom:14px" onclick="toggleSpecies('${sp.id}')">
+        <div class="sp-cover">
+          ${coverPhoto ? `<img src="${coverPhoto.dataUrl}" alt="${sp.name}">` : '<div class="sp-cover-placeholder">🐦</div>'}
+          <div class="sp-cover-gradient"></div>
+          <div class="sp-cover-info">
+            <div class="sp-cover-name">${sp.name}</div>
+            <div class="sp-cover-sci">${sp.scientific}</div>
+          </div>
+        </div>
+        ${stripThumbs ? `<div class="sp-strip">${stripThumbs}</div>` : ''}
+        <div class="sp-foot">
+          <span class="badge ${sexClass}">${sp.sex}</span>
+          <span class="sp-count"><strong>${sp.individuals.length}</strong> indivíduo${sp.individuals.length!==1?'s':''} · <strong>${totalAvs}</strong> avistamentos</span>
+        </div>
+      </div>
+      <div class="ind-section" id="indsec_${sp.id}">
+        <div class="ind-section-title">Indivíduos de ${sp.name}</div>
+        <div class="ind-grid">
+          ${indGrid}
+          <div class="ind-btn-new" onclick="openNewIndividual('${sp.id}')">
+            <span style="font-size:22px">+</span>
+            <span>Novo indivíduo</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSpecies(spId) {
+  const el = document.getElementById('indsec_'+spId);
+  if (el) el.style.display = el.style.display === 'none' ? '' : 'none';
+}
+
+// ══ INDIVIDUAL MODAL ══
+let modalSpId = null;
+function openModal(indId, spId) {
+  modalIndividualId = indId;
+  modalSpId = spId;
+  const sp = catalog.species.find(s=>s.id===spId);
+  const ind = sp?.individuals.find(i=>i.id===indId);
+  if (!ind) return;
+  const displayName = ind.customName || (sp.name + ' ' + (sp.individuals.indexOf(ind)+1));
+  document.getElementById('nameEdInput').value = ind.customName||'';
+  // hero
+  const hero = document.getElementById('modalHero');
+  const lastPhoto = ind.photos[ind.photos.length-1];
+  hero.innerHTML = lastPhoto
+    ? `<img src="${lastPhoto.dataUrl}" alt="${displayName}" style="width:100%;height:100%;object-fit:cover">
+       <div class="modal-hero-grad"></div>
+       <div class="modal-hero-name"><div class="modal-hero-bird">${displayName}</div><div class="modal-hero-sp">${sp.name} · ${sp.scientific}</div></div>`
+    : `<div class="modal-hero-ph">🐦</div><div class="modal-hero-name"><div class="modal-hero-bird">${displayName}</div></div>`;
+
+  // stats
+  const uniqueDays = new Set(ind.sightingDates.map(d=>d.split(' ')[0])).size;
+  document.getElementById('mAvs').textContent = ind.sightingDates.length;
+  document.getElementById('mDias').textContent = uniqueDays;
+  document.getElementById('mFotos').textContent = ind.photos.length;
+
+  // film strip
+  document.getElementById('modalFilmStrip').innerHTML = ind.photos.map((p,pi) =>
+    `<div class="film-frame-wrap">
+      <img class="film-frame" src="${p.dataUrl}" alt="" onclick="heroSwap('${p.dataUrl}','${displayName}','${sp.name} · ${sp.scientific}')">
+      ${p.date ? `<div class="film-date">${p.date}</div>` : ''}
+    </div>`).join('');
+
+  // timeline
+  const sorted = [...ind.sightingDates].sort();
+  document.getElementById('modalTimeline').innerHTML = sorted.map((d,di) => {
+    const parts = d.split(' ');
+    const ph = ind.photos[di];
+    return `<div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">${parts[0]||d}</div>
+      <div class="tl-time">${parts[1]||''}</div>
+      ${ph ? `<img class="tl-thumb" src="${ph.dataUrl}" alt="">` : ''}
+    </div>`;
+  }).join('');
+
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function heroSwap(src, name, sub) {
+  const hero = document.getElementById('modalHero');
+  hero.innerHTML = `<img src="${src}" alt="${name}" style="width:100%;height:100%;object-fit:cover">
+    <div class="modal-hero-grad"></div>
+    <div class="modal-hero-name"><div class="modal-hero-bird">${name}</div><div class="modal-hero-sp">${sub}</div></div>`;
+  document.querySelectorAll('.film-frame').forEach(f => f.classList.remove('active-frame'));
+  event.target.classList.add('active-frame');
+}
+
+function saveName() {
+  if (!modalIndividualId || !modalSpId) return;
+  const sp = catalog.species.find(s=>s.id===modalSpId);
+  const ind = sp?.individuals.find(i=>i.id===modalIndividualId);
+  if (!ind) return;
+  ind.customName = document.getElementById('nameEdInput').value.trim();
+  save();
+  renderAlbum();
+  toast(`Nome salvo: ${ind.customName}`);
+  // update hero
+  const lastPhoto = ind.photos[ind.photos.length-1];
+  const hero = document.getElementById('modalHero');
+  if (lastPhoto) {
+    const dn = ind.customName || sp.name;
+    hero.querySelector('.modal-hero-bird').textContent = dn;
+  }
+}
+
+function deleteIndividual() {
+  if (!modalIndividualId || !modalSpId) return;
+  const sp = catalog.species.find(s=>s.id===modalSpId);
+  if (!sp) return;
+  const idx = sp.individuals.findIndex(i=>i.id===modalIndividualId);
+  if (idx >= 0) {
+    const name = sp.individuals[idx].customName || 'Indivíduo';
+    sp.individuals.splice(idx, 1);
+    if (sp.individuals.length === 0) {
+      catalog.species.splice(catalog.species.indexOf(sp), 1);
+    }
+    save();
+    updateHeader();
+    renderAlbum();
+    closeModalDirect();
+    toast(`${name} removido`);
+  }
+}
+
+function openNewIndividual(spId) {
+  const sp = catalog.species.find(s=>s.id===spId);
+  if (!sp) return;
+  const name = prompt(`Nome do novo indivíduo de ${sp.name}:`);
+  if (!name) return;
+  const ind = { id: 'ind_'+Date.now(), customName: name, speciesId: spId, photos: [], sightingDates: [] };
+  sp.individuals.push(ind);
+  save();
+  renderAlbum();
+  toast(`${name} criado!`);
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modalOverlay')) return;
+  closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// ══ GOOGLE DRIVE ══
+let gapiReady = false;
+let driveItems = [];
+
+function signInGoogle() {
+  if (!gapiReady) {
+    toast('Carregando Google API...');
+    gapi.load('client:auth2', () => {
+      gapi.client.init({
+        clientId: CLIENT_ID,
+        scope: SCOPES,
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+      }).then(() => {
+        gapiReady = true;
+        return gapi.auth2.getAuthInstance().signIn();
+      }).then(() => listDriveFolder()).catch(e => toast('Erro ao conectar: ' + e.error));
+    });
+  } else {
+    gapi.auth2.getAuthInstance().signIn().then(() => listDriveFolder());
+  }
+}
+
+function loadFromFolderUrl() {
+  const url = document.getElementById('folderUrl').value.trim();
+  const match = url.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if (!match) { toast('URL inválida'); return; }
+  const folderId = match[1];
+  if (!gapiReady) {
+    gapi.load('client:auth2', () => {
+      gapi.client.init({
+        clientId: CLIENT_ID,
+        scope: SCOPES,
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+      }).then(() => {
+        gapiReady = true;
+        const authInst = gapi.auth2.getAuthInstance();
+        if (!authInst.isSignedIn.get()) return authInst.signIn().then(() => listDriveFolder(folderId));
+        else return listDriveFolder(folderId);
+      }).catch(e => toast('Erro: ' + (e.error||e.message||'Falha na autenticação')));
+    });
+  } else {
+    listDriveFolder(folderId);
+  }
+}
+
+async function listDriveFolder(folderId) {
+  try {
+    const resp = await gapi.client.drive.files.list({
+      q: `'${folderId}' in parents and mimeType contains 'image/' and trashed=false`,
+      fields: 'files(id,name,mimeType,createdTime,imageMediaMetadata)',
+      orderBy: 'createdTime',
+      pageSize: 100
+    });
+    driveItems = resp.result.files || [];
+    document.getElementById('driveAuthScreen').style.display = 'none';
+    document.getElementById('driveFileList').style.display = '';
+    document.getElementById('driveFileCount').textContent = `${driveItems.length} fotos encontradas`;
+    renderDriveGrid();
+  } catch(e) {
+    toast('Erro ao listar pasta: ' + (e.result?.error?.message||'verifique permissões'));
+  }
+}
+
+function renderDriveGrid() {
+  const grid = document.getElementById('driveGrid');
+  grid.innerHTML = driveItems.map((f,i) => {
+    const thumbUrl = `https://drive.google.com/thumbnail?id=${f.id}&sz=w200`;
+    const date = f.imageMediaMetadata?.time || f.createdTime?.split('T')[0] || '';
+    return `<div class="q-card" id="dcard_${i}">
+      <img class="q-thumb" src="${thumbUrl}" alt="${f.name}" onerror="this.style.background='var(--musgo)'">
+      ${date ? `<div class="q-exif">${date}</div>` : ''}
+      <div class="q-foot">
+        <div class="q-fname">${f.name}</div>
+        <div class="q-st pending" id="dst_${i}">Aguardando</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function processDriveFiles() {
+  const btn = document.getElementById('btnDriveProcess');
+  btn.disabled = true;
+  document.getElementById('driveProcBanner').classList.add('show');
+  for (let i = 0; i < driveItems.length; i++) {
+    const f = driveItems[i];
+    document.getElementById('driveProcName').textContent = f.name;
+    document.getElementById('driveProcProg').textContent = `(${i+1}/${driveItems.length})`;
+    const stEl = document.getElementById('dst_'+i);
+    if (stEl) { stEl.className='q-st processing'; stEl.textContent='Analisando...'; }
+    try {
+      const resp = await gapi.client.drive.files.get({ fileId: f.id, alt: 'media' });
+      // Convert to base64
+      const binary = resp.body;
+      const b64 = btoa(binary);
+      const mime = f.mimeType || 'image/jpeg';
+      const dataUrl = `data:${mime};base64,${b64}`;
+      const exifDate = f.imageMediaMetadata?.time || f.createdTime;
+      const exif = exifDate ? { date: exifDate.split('T')[0].split('-').reverse().join('/'), time: exifDate.split('T')[1]?.substring(0,5)||'', full: exifDate } : null;
+      // push to queue for unified processing
+      const qItem = { file: {name: f.name}, dataUrl, exif, result: null, status: 'processing', added: false, assignedTo: null };
+      queue.push(qItem);
+      const qi = queue.length - 1;
+      await _analyzeDataUrl(dataUrl, f.name, exif, qi, queue, null);
+      if (stEl) {
+        const r = queue[qi].result;
+        stEl.className='q-st done';
+        stEl.textContent = r?.name||'Identificado';
+        document.getElementById('dcard_'+i).innerHTML += `<div class="q-done-badge">✓</div>`;
+      }
+    } catch(e) {
+      if (stEl) { stEl.className='q-st error'; stEl.textContent='Erro'; }
+    }
+    await new Promise(r=>setTimeout(r,400));
+  }
+  document.getElementById('driveProcBanner').classList.remove('show');
+  btn.disabled = false;
+  // switch to lote to review results
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab')[1].classList.add('active');
+  document.getElementById('sec-lote').classList.add('active');
+  renderQueue();
+  if (queue.length) viewResult(queue.length - driveItems.length);
+  toast('Drive processado! Revise e confirme na aba Lote.');
+}
+
+// ══ DRAG & DROP ══
+const uz = document.getElementById('uploadZone');
+uz.addEventListener('dragover', e=>{e.preventDefault();uz.classList.add('over');});
+uz.addEventListener('dragleave', ()=>uz.classList.remove('over'));
+uz.addEventListener('drop', e=>{
+  e.preventDefault();uz.classList.remove('over');
+  const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = async ev=>{
+      const exif = await parseExif(ev.target.result);
+      queue.push({file,dataUrl:ev.target.result,exif,result:null,status:'pending',added:false,assignedTo:null});
+      renderQueue();
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+// ══ TOAST ══
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2800);
+}
+
+// ══ INIT ══
+load();
+</script>
+</body>
+</html>
